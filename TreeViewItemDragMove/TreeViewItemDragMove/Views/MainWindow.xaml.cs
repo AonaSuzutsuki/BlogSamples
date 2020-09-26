@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using TreeViewItemDragMove.Extensions;
 using TreeViewItemDragMove.ViewModels;
 
-namespace TreeViewItemDragMove
+namespace TreeViewItemDragMove.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
