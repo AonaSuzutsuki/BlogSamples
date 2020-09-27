@@ -50,6 +50,8 @@ namespace TreeViewItemDragMove.Views
 
         private void SampleTreeViewOnDragOver(object sender, DragEventArgs e)
         {
+            ResetSeparator(_changedBlocks);
+
             if (!e.Data.GetDataPresent(typeof(TreeViewItemInfo)))
                 return;
 
@@ -58,21 +60,16 @@ namespace TreeViewItemDragMove.Views
             if (!(sender is ItemsControl itemsControl))
                 return;
 
-            var scrollViewer = itemsControl.Descendants<ScrollViewer>().FirstOrDefault();
-            DragScroll(scrollViewer, itemsControl, e);
+            DragScroll(itemsControl, e);
 
-            var sourceItem = (TreeViewItemInfo) e.Data.GetData(typeof(TreeViewItemInfo));
+            var sourceItem = (TreeViewItemInfo)e.Data.GetData(typeof(TreeViewItemInfo));
             var targetElement = HitTest<FrameworkElement>(itemsControl, e.GetPosition);
 
             var parentGrid = targetElement?.GetParent<Grid>();
-            if (parentGrid == null || !(targetElement.DataContext is TreeViewItemInfo targetElementInfo))
+            if (parentGrid == null || !(targetElement.DataContext is TreeViewItemInfo targetElementInfo) || targetElementInfo == sourceItem)
                 return;
 
-            ResetSeparator(_changedBlocks);
-
-            var targetParent = targetElementInfo.Parent;
-            if (targetElementInfo == sourceItem || targetParent == null)
-                return;
+            var targetParentLast = GetParentLastChild(targetElementInfo);
 
             const int boundary = 10;
             var pos = e.GetPosition(parentGrid);
@@ -81,7 +78,7 @@ namespace TreeViewItemDragMove.Views
                 _insertType = InsertType.Before;
                 targetElementInfo.BeforeSeparatorVisibility = Visibility.Visible;
             }
-            else if (targetParent.Children.Last() == targetElementInfo
+            else if (targetParentLast == targetElementInfo
                      && pos.Y < parentGrid.ActualHeight && pos.Y > parentGrid.ActualHeight - boundary)
             {
                 _insertType = InsertType.After;
@@ -90,7 +87,7 @@ namespace TreeViewItemDragMove.Views
             else
             {
                 _insertType = InsertType.Children;
-                targetElementInfo.Background = Brushes.Black;
+                targetElementInfo.Background = Brushes.Gray;
             }
 
             if (!_changedBlocks.Contains(targetElementInfo))
@@ -118,14 +115,17 @@ namespace TreeViewItemDragMove.Views
                 case InsertType.Before:
                     targetItemParent.InsertBeforeChildren(sourceItem, targetItem);
                     sourceItem.Parent = targetItemParent;
+                    sourceItem.IsSelected = true;
                     break;
                 case InsertType.After:
                     targetItemParent.InsertAfterChildren(sourceItem, targetItem);
                     sourceItem.Parent = targetItemParent;
+                    sourceItem.IsSelected = true;
                     break;
                 default:
                     targetItem.AddChildren(sourceItem);
                     targetItem.IsExpanded = true;
+                    sourceItem.IsSelected = true;
                     sourceItem.Parent = targetItem;
                     break;
             }
@@ -164,6 +164,13 @@ namespace TreeViewItemDragMove.Views
                 _startPos = null;
         }
 
+        private static TreeViewItemInfo GetParentLastChild(TreeViewItemInfo info)
+        {
+            var targetParent = info.Parent;
+            var last = targetParent?.Children.LastOrDefault();
+            return last;
+        }
+
         private static void RemoveCurrentItem(TreeViewItemInfo sourceItemParent, TreeViewItemInfo sourceItem)
         {
             sourceItemParent.RemoveChildren(sourceItem);
@@ -186,8 +193,9 @@ namespace TreeViewItemDragMove.Views
             info.AfterSeparatorVisibility = Visibility.Hidden;
         }
 
-        private static void DragScroll(ScrollViewer scrollViewer, FrameworkElement itemsControl, DragEventArgs e)
+        private static void DragScroll(FrameworkElement itemsControl, DragEventArgs e)
         {
+            var scrollViewer = itemsControl.Descendants<ScrollViewer>().FirstOrDefault();
             const double tolerance = 10d;
             const double offset = 3d;
             var verticalPos = e.GetPosition(itemsControl).Y;
