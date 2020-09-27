@@ -10,7 +10,6 @@ namespace TreeViewItemDragMove.ViewModels
 {
     public class TreeViewItemInfo : BindableBase
     {
-        private ObservableCollection<TreeViewItemInfo> _children = new ObservableCollection<TreeViewItemInfo>();
         private string _name;
         private Brush _background = Brushes.Transparent;
         private bool _isExpanded;
@@ -20,11 +19,8 @@ namespace TreeViewItemDragMove.ViewModels
 
         public TreeViewItemInfo Parent { get; set; }
 
-        public ObservableCollection<TreeViewItemInfo> Children
-        {
-            get => _children;
-            set => _children = value;
-        }
+        public ObservableCollection<TreeViewItemInfo> Children { get; set; } = new ObservableCollection<TreeViewItemInfo>();
+
         public string Name
         {
             get => _name;
@@ -41,6 +37,12 @@ namespace TreeViewItemDragMove.ViewModels
         {
             get => _isExpanded;
             set => SetProperty(ref _isExpanded, value);
+        }
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
         }
 
         public Visibility BeforeSeparatorVisibility
@@ -69,30 +71,30 @@ namespace TreeViewItemDragMove.ViewModels
 
         public void InsertBeforeChildren(TreeViewItemInfo from, TreeViewItemInfo to)
         {
-            var index = _children.IndexOf(to);
+            var index = Children.IndexOf(to);
             if (index < 0)
                 return;
 
-            _children.Insert(index, from);
+            Children.Insert(index, from);
         }
 
         public void InsertAfterChildren(TreeViewItemInfo from, TreeViewItemInfo to)
         {
-            var index = _children.IndexOf(to);
+            var index = Children.IndexOf(to);
             if (index < 0)
                 return;
 
-            _children.Insert(index + 1, from);
+            Children.Insert(index + 1, from);
         }
 
         public void AddChildren(TreeViewItemInfo info)
         {
-            _children.Add(info);
+            Children.Add(info);
         }
 
         public void RemoveChildren(TreeViewItemInfo info)
         {
-            _children.Remove(info);
+            Children.Remove(info);
         }
     }
     public class MainWindowViewModels
