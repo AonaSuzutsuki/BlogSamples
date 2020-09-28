@@ -52,12 +52,7 @@ namespace TreeViewItemDragMove.Views
         {
             ResetSeparator(_changedBlocks);
 
-            if (!e.Data.GetDataPresent(typeof(TreeViewItemInfo)))
-                return;
-
-            e.Effects = DragDropEffects.Move;
-
-            if (!(sender is ItemsControl itemsControl))
+            if (!(sender is ItemsControl itemsControl) || !e.Data.GetDataPresent(typeof(TreeViewItemInfo)))
                 return;
 
             DragScroll(itemsControl, e);
@@ -115,6 +110,9 @@ namespace TreeViewItemDragMove.Views
             var targetItem = HitTest<FrameworkElement>(itemsControl, e.GetPosition)?.DataContext as TreeViewItemInfo;
 
             if (targetItem == null || sourceItem == null || sourceItem == targetItem)
+                return;
+
+            if (targetItem.ContainsParent(sourceItem))
                 return;
 
             var targetItemParent = targetItem.Parent;
