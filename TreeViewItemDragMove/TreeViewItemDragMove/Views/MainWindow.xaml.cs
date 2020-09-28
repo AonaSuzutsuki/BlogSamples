@@ -69,6 +69,11 @@ namespace TreeViewItemDragMove.Views
             if (parentGrid == null || !(targetElement.DataContext is TreeViewItemInfo targetElementInfo) || targetElementInfo == sourceItem)
                 return;
 
+            if (targetElementInfo.ContainsParent(sourceItem))
+                return;
+
+            e.Effects = DragDropEffects.Move;
+
             var targetParentLast = GetParentLastChild(targetElementInfo);
 
             const int boundary = 10;

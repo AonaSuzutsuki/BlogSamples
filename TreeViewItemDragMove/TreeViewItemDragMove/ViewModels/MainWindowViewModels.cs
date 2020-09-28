@@ -96,6 +96,13 @@ namespace TreeViewItemDragMove.ViewModels
         {
             Children.Remove(info);
         }
+
+        public bool ContainsParent(TreeViewItemInfo info)
+        {
+            if (Parent == null)
+                return false;
+            return Parent == info || Parent.ContainsParent(info);
+        }
     }
     public class MainWindowViewModels
     {
