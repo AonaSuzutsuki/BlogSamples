@@ -90,11 +90,8 @@ namespace TreeViewItemDragMove.Views
                 targetElementInfo.Background = Brushes.Gray;
             }
 
-            lock (_changedBlocks)
-            {
-                if (!_changedBlocks.Contains(targetElementInfo))
-                    _changedBlocks.Add(targetElementInfo);
-            }
+            if (!_changedBlocks.Contains(targetElementInfo))
+                _changedBlocks.Add(targetElementInfo);
         }
 
         
@@ -186,14 +183,11 @@ namespace TreeViewItemDragMove.Views
 
         private static void ResetSeparator(ICollection<TreeViewItemInfo> collection)
         {
-            lock (collection)
+            var list = collection.ToList();
+            foreach (var pair in list)
             {
-                var list = collection.ToList();
-                foreach (var pair in list)
-                {
-                    ResetSeparator(pair);
-                    collection.Remove(pair);
-                }
+                ResetSeparator(pair);
+                collection.Remove(pair);
             }
         }
 
