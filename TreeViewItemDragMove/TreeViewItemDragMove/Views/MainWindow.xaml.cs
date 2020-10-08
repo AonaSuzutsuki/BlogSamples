@@ -213,8 +213,8 @@ namespace TreeViewItemDragMove.Views
         private static T HitTest<T>(UIElement itemsControl, Func<IInputElement, Point> getPosition) where T : class
         {
             var pt = getPosition(itemsControl);
-            var result = VisualTreeHelper.HitTest(itemsControl, pt);
-            if (result.VisualHit is T ret)
+            var result = itemsControl.InputHitTest(pt) as DependencyObject;
+            if (resultis T ret)
                 return ret;
             return null;
         }
