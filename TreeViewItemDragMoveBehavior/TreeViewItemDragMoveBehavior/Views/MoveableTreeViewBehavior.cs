@@ -135,7 +135,28 @@ namespace TreeViewItemDragMoveBehavior.Views
                 return;
 
             var sourceItemParent = sourceItem.Parent;
+            var targetItemParent = targetItem.Parent;
             RemoveCurrentItem(sourceItemParent, sourceItem);
+            switch (_insertType)
+            {
+                case InsertType.Before:
+                    targetItemParent.InsertBeforeChildren(sourceItem, targetItem);
+                    sourceItem.Parent = targetItemParent;
+                    sourceItem.IsSelected = true;
+                    break;
+                case InsertType.After:
+                    targetItemParent.InsertAfterChildren(sourceItem, targetItem);
+                    sourceItem.Parent = targetItemParent;
+                    sourceItem.IsSelected = true;
+                    break;
+                case InsertType.Children:
+                    targetItem.AddChildren(sourceItem);
+                    targetItem.IsExpanded = true;
+                    sourceItem.IsSelected = true;
+                    sourceItem.Parent = targetItem;
+                    break;
+            }
+
             DropCommand?.Execute(new DropArguments
             {
                 Source = sourceItem,

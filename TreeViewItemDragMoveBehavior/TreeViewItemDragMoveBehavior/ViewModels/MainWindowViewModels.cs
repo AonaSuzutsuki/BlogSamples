@@ -61,28 +61,16 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
 
         public void Drop(DropArguments args)
         {
-            var targetItem = args.Target;
-            var sourceItem = args.Source;
-            var targetItemParent = targetItem.Parent;
             switch (args.Type)
             {
                 case MoveableTreeViewBehavior.InsertType.Before:
-                    targetItemParent.InsertBeforeChildren(sourceItem, targetItem);
-                    sourceItem.Parent = targetItemParent;
-                    sourceItem.IsSelected = true;
+                    Debug.WriteLine("Before");
                     break;
                 case MoveableTreeViewBehavior.InsertType.After:
-                    targetItemParent.InsertAfterChildren(sourceItem, targetItem);
-                    sourceItem.Parent = targetItemParent;
-                    sourceItem.IsSelected = true;
+                    Debug.WriteLine("After");
                     break;
                 case MoveableTreeViewBehavior.InsertType.Children:
-                    targetItem.AddChildren(sourceItem);
-                    targetItem.IsExpanded = true;
-                    sourceItem.IsSelected = true;
-                    sourceItem.Parent = targetItem;
-                    break;
-                default:
+                    Debug.WriteLine("Children");
                     break;
             }
         }
