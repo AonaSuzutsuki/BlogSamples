@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SortableListView.ViewModels
 {
-    public class ListViewValue
+    public struct ListViewValue
     {
         public int Id { get; set; }
 

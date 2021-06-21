@@ -10,18 +10,6 @@ using Microsoft.Xaml.Behaviors;
 
 namespace SortableListView.Behaviors
 {
-    public class HeaderSortEventArgs : EventArgs
-    {
-        public string HeaderName { get; }
-        public Action<string> SetContentSuffixAction { get; }
-
-        public HeaderSortEventArgs(string headerName, Action<string> setContentSuffixAction)
-        {
-            HeaderName = headerName;
-            SetContentSuffixAction = setContentSuffixAction;
-        }
-    }
-
     public class SortableListViewBehavior : Behavior<ListView>
     {
 
@@ -29,6 +17,22 @@ namespace SortableListView.Behaviors
 
         private readonly Dictionary<GridViewColumnHeader, string> _headers =
             new Dictionary<GridViewColumnHeader, string>();
+
+        #endregion
+
+        #region Dependency Properties
+
+        public string FirstSort
+        {
+            get => (string)GetValue(FirstSortProperty);
+            set => SetValue(FirstSortProperty, value);
+        }
+
+        public static readonly DependencyProperty FirstSortProperty = DependencyProperty.Register(
+            "FirstSort",
+            typeof(string),
+            typeof(SortableListViewBehavior),
+            new UIPropertyMetadata(null));
 
         #endregion
 
@@ -66,8 +70,8 @@ namespace SortableListView.Behaviors
 
             var content = header.Content.ToString();
 
-            GridViewColumnHeaderSort(AssociatedObject, new HeaderSortEventArgs(header.Tag.ToString(),
-                arg => header.Content = $"{content} {arg}"));
+            GridViewColumnHeaderSort(AssociatedObject, header.Tag.ToString(),
+                arg => header.Content = $"{content} {arg}");
         }
 
         private void AssociatedObjectOnLoaded(object sender, RoutedEventArgs e)
@@ -87,35 +91,35 @@ namespace SortableListView.Behaviors
             var firstHeader = _headers.Keys.First();
             var content = firstHeader.Content.ToString();
 
-            GridViewColumnHeaderSort(AssociatedObject, new HeaderSortEventArgs("Id",
-                arg => firstHeader.Content = $"{content} {arg}"));
+            if (!string.IsNullOrEmpty(FirstSort))
+                GridViewColumnHeaderSort(AssociatedObject, FirstSort,
+                    arg => firstHeader.Content = $"{content} {arg}");
         }
 
 
-        public void GridViewColumnHeaderSort(ListView listView, HeaderSortEventArgs eventArgs)
+        public void GridViewColumnHeaderSort(ListView listView, string headerName, Action<string> setContentSuffixAction)
         {
-            var header = eventArgs.HeaderName;
             var collectionView = CollectionViewSource.GetDefaultView(listView.ItemsSource);
 
             var sortDescription = collectionView.SortDescriptions.FirstOrDefault();
             collectionView.SortDescriptions.Clear();
-            if (sortDescription.PropertyName == header)
+            if (sortDescription.PropertyName == headerName)
             {
                 if (sortDescription.Direction == ListSortDirection.Ascending)
                 {
-                    collectionView.SortDescriptions.Add(new SortDescription(header, ListSortDirection.Descending));
-                    eventArgs.SetContentSuffixAction?.Invoke("↓");
+                    collectionView.SortDescriptions.Add(new SortDescription(headerName, ListSortDirection.Descending));
+                    setContentSuffixAction?.Invoke("↓");
                 }
                 else
                 {
-                    collectionView.SortDescriptions.Add(new SortDescription(header, ListSortDirection.Ascending));
-                    eventArgs.SetContentSuffixAction?.Invoke("↑");
+                    collectionView.SortDescriptions.Add(new SortDescription(headerName, ListSortDirection.Ascending));
+                    setContentSuffixAction?.Invoke("↑");
                 }
             }
             else
             {
-                collectionView.SortDescriptions.Add(new SortDescription(header, ListSortDirection.Ascending));
-                eventArgs.SetContentSuffixAction?.Invoke("↑");
+                collectionView.SortDescriptions.Add(new SortDescription(headerName, ListSortDirection.Ascending));
+                setContentSuffixAction?.Invoke("↑");
             }
         }
     }

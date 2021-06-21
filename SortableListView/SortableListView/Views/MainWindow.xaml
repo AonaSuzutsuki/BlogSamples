@@ -16,18 +16,13 @@
     <Grid>
         <ListView ItemsSource="{Binding Accounts}">
             <i:Interaction.Behaviors>
-                <behaviors:SortableListViewBehavior />
+                <behaviors:SortableListViewBehavior FirstSort="Id" />
             </i:Interaction.Behaviors>
 
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="40">
+                    <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
                         <GridViewColumnHeader Tag="Id" Content="ID" />
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate DataType="viewModels:ListViewValue">
-                                <TextBlock Text="{Binding Id}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
                     <GridViewColumn Width="100">
