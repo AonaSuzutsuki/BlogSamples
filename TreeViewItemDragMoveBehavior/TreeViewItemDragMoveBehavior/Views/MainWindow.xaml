@@ -1,0 +1,40 @@
+﻿<Window x:Class="TreeViewItemDragMoveBehavior.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:TreeViewItemDragMoveBehavior.Views"
+        xmlns:viewModels="clr-namespace:TreeViewItemDragMoveBehavior.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModels />
+    </Window.DataContext>
+
+    <Grid>
+        <TreeView Name="SampleTreeView" ItemsSource="{Binding SampleItems}">
+            <i:Interaction.Behaviors>
+                <local:MoveableTreeViewBehavior DropCommand="{Binding DropCommand}" />
+            </i:Interaction.Behaviors>
+
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="viewModels:TreeViewItemInfoBase" ItemsSource="{Binding Children}">
+                    <Grid Background="{Binding Background}">
+                        <StackPanel>
+                            <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility}" />
+                            <TextBlock Text="{Binding Name}" MinWidth="60" />
+                            <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding AfterSeparatorVisibility}" />
+                        </StackPanel>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded,Mode=TwoWay}"/>
+                    <Setter Property="IsSelected" Value="{Binding Path=IsSelected,Mode=TwoWay}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+    </Grid>
+</Window>

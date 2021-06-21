@@ -3,39 +3,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using TreeViewItemDragMove.Extensions;
-using TreeViewItemDragMove.ViewModels;
+using Microsoft.Xaml.Behaviors;
+using Prism.Commands;
+using TreeViewItemDragMoveBehavior.Extensions;
+using TreeViewItemDragMoveBehavior.ViewModels;
 
-namespace TreeViewItemDragMove.Views
+namespace TreeViewItemDragMoveBehavior.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+
+    public class DropArguments
     {
-        public MainWindow()
-        {
-            InitializeComponent();
+        public TreeViewItemInfoBase Source { get; set; }
+        public TreeViewItemInfoBase Target { get; set; }
+        public MoveableTreeViewBehavior.InsertType Type { get; set; }
+    }
 
-            DataContext = new MainWindowViewModels();
-
-            SampleTreeView.AllowDrop = true;
-            SampleTreeView.PreviewMouseLeftButtonDown += SampleTreeViewOnPreviewMouseLeftButtonDown;
-            SampleTreeView.PreviewMouseLeftButtonUp += SampleTreeViewOnPreviewMouseLeftButtonUp;
-            SampleTreeView.PreviewMouseMove += SampleTreeViewOnPreviewMouseMove;
-            SampleTreeView.Drop += SampleTreeViewOnDrop;
-            SampleTreeView.DragOver += SampleTreeViewOnDragOver;
-        }
+    public class MoveableTreeViewBehavior : Behavior<TreeView>
+    {
 
         public enum InsertType
         {
@@ -44,24 +32,60 @@ namespace TreeViewItemDragMove.Views
             Children
         }
 
-        private readonly HashSet<TreeViewItemInfo> _changedBlocks = new HashSet<TreeViewItemInfo>();
+        private readonly HashSet<TreeViewItemInfoBase> _changedBlocks = new HashSet<TreeViewItemInfoBase>();
         private InsertType _insertType;
         private Point? _startPos;
 
-        private void SampleTreeViewOnDragOver(object sender, DragEventArgs e)
+        #region DropCommand
+        public ICommand DropCommand
+        {
+            get => (ICommand)GetValue(DropCommandProperty);
+            set => SetValue(DropCommandProperty, value);
+        }
+
+        public static readonly DependencyProperty DropCommandProperty = DependencyProperty.Register(
+            "DropCommand",
+            typeof(ICommand),
+            typeof(MoveableTreeViewBehavior),
+            new UIPropertyMetadata(null));
+        #endregion
+
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+            AssociatedObject.AllowDrop = true;
+            AssociatedObject.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
+            AssociatedObject.PreviewMouseLeftButtonUp += OnPreviewMouseLeftButtonUp;
+            AssociatedObject.PreviewMouseMove += OnPreviewMouseMove;
+            AssociatedObject.Drop += OnDrop;
+            AssociatedObject.DragOver += OnDragOver;
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.AllowDrop = false;
+            AssociatedObject.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+            AssociatedObject.PreviewMouseLeftButtonUp -= OnPreviewMouseLeftButtonUp;
+            AssociatedObject.PreviewMouseMove -= OnPreviewMouseMove;
+            AssociatedObject.Drop -= OnDrop;
+            AssociatedObject.DragOver -= OnDragOver;
+        }
+
+        private void OnDragOver(object sender, DragEventArgs e)
         {
             ResetSeparator(_changedBlocks);
 
-            if (!(sender is ItemsControl itemsControl) || !e.Data.GetDataPresent(typeof(TreeViewItemInfo)))
+            if (!(sender is ItemsControl itemsControl) || !e.Data.GetDataPresent(typeof(TreeViewItemInfoBase)))
                 return;
 
             DragScroll(itemsControl, e);
 
-            var sourceItem = (TreeViewItemInfo)e.Data.GetData(typeof(TreeViewItemInfo));
+            var sourceItem = (TreeViewItemInfoBase)e.Data.GetData(typeof(TreeViewItemInfoBase));
             var targetElement = HitTest<FrameworkElement>(itemsControl, e.GetPosition);
 
             var parentGrid = targetElement?.GetParent<Grid>();
-            if (parentGrid == null || !(targetElement.DataContext is TreeViewItemInfo targetElementInfo) || targetElementInfo == sourceItem)
+            if (parentGrid == null || !(targetElement.DataContext is TreeViewItemInfoBase targetElementInfo) || targetElementInfo == sourceItem)
                 return;
 
             if (targetElementInfo.ContainsParent(sourceItem))
@@ -94,17 +118,15 @@ namespace TreeViewItemDragMove.Views
                 _changedBlocks.Add(targetElementInfo);
         }
 
-        
-
-        private void SampleTreeViewOnDrop(object sender, DragEventArgs e)
+        private void OnDrop(object sender, DragEventArgs e)
         {
             ResetSeparator(_changedBlocks);
 
             if (!(sender is ItemsControl itemsControl))
                 return;
 
-            var sourceItem = (TreeViewItemInfo) e.Data.GetData(typeof(TreeViewItemInfo));
-            var targetItem = HitTest<FrameworkElement>(itemsControl, e.GetPosition)?.DataContext as TreeViewItemInfo;
+            var sourceItem = (TreeViewItemInfoBase)e.Data.GetData(typeof(TreeViewItemInfoBase));
+            var targetItem = HitTest<FrameworkElement>(itemsControl, e.GetPosition)?.DataContext as TreeViewItemInfoBase;
 
             if (targetItem == null || sourceItem == null || sourceItem == targetItem)
                 return;
@@ -112,8 +134,8 @@ namespace TreeViewItemDragMove.Views
             if (targetItem.ContainsParent(sourceItem))
                 return;
 
-            var targetItemParent = targetItem.Parent;
             var sourceItemParent = sourceItem.Parent;
+            var targetItemParent = targetItem.Parent;
             RemoveCurrentItem(sourceItemParent, sourceItem);
             switch (_insertType)
             {
@@ -127,22 +149,29 @@ namespace TreeViewItemDragMove.Views
                     sourceItem.Parent = targetItemParent;
                     sourceItem.IsSelected = true;
                     break;
-                default:
+                case InsertType.Children:
                     targetItem.AddChildren(sourceItem);
                     targetItem.IsExpanded = true;
                     sourceItem.IsSelected = true;
                     sourceItem.Parent = targetItem;
                     break;
             }
+
+            DropCommand?.Execute(new DropArguments
+            {
+                Source = sourceItem,
+                Target = targetItem,
+                Type = _insertType
+            });
         }
 
-        private void SampleTreeViewOnPreviewMouseMove(object sender, MouseEventArgs e)
+        private void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (!(sender is TreeView treeView) || treeView.SelectedItem == null || _startPos == null)
                 return;
 
             var cursorPoint = treeView.PointToScreen(e.GetPosition(treeView));
-            var diff = cursorPoint - (Point) _startPos;
+            var diff = cursorPoint - (Point)_startPos;
             if (!CanDrag(diff))
                 return;
 
@@ -151,37 +180,40 @@ namespace TreeViewItemDragMove.Views
             _startPos = null;
         }
 
-        private void SampleTreeViewOnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _startPos = null;
         }
 
-        private void SampleTreeViewOnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is ItemsControl itemsControl))
                 return;
 
             var pos = e.GetPosition(itemsControl);
             var hit = HitTest<FrameworkElement>(itemsControl, e.GetPosition);
-            if (hit.DataContext is TreeViewItemInfo)
+            if (hit.DataContext is TreeViewItemInfoBase)
                 _startPos = itemsControl.PointToScreen(pos);
             else
                 _startPos = null;
         }
 
-        private static TreeViewItemInfo GetParentLastChild(TreeViewItemInfo info)
+
+
+
+        private static TreeViewItemInfoBase GetParentLastChild(TreeViewItemInfoBase infoBase)
         {
-            var targetParent = info.Parent;
+            var targetParent = infoBase.Parent;
             var last = targetParent?.Children.LastOrDefault();
             return last;
         }
 
-        private static void RemoveCurrentItem(TreeViewItemInfo sourceItemParent, TreeViewItemInfo sourceItem)
+        private static void RemoveCurrentItem(TreeViewItemInfoBase sourceItemParent, TreeViewItemInfoBase sourceItem)
         {
             sourceItemParent.RemoveChildren(sourceItem);
         }
 
-        private static void ResetSeparator(ICollection<TreeViewItemInfo> collection)
+        private static void ResetSeparator(ICollection<TreeViewItemInfoBase> collection)
         {
             var list = collection.ToList();
             foreach (var pair in list)
@@ -191,11 +223,11 @@ namespace TreeViewItemDragMove.Views
             }
         }
 
-        private static void ResetSeparator(TreeViewItemInfo info)
+        private static void ResetSeparator(TreeViewItemInfoBase infoBase)
         {
-            info.Background = Brushes.Transparent;
-            info.BeforeSeparatorVisibility = Visibility.Hidden;
-            info.AfterSeparatorVisibility = Visibility.Hidden;
+            infoBase.Background = Brushes.Transparent;
+            infoBase.BeforeSeparatorVisibility = Visibility.Hidden;
+            infoBase.AfterSeparatorVisibility = Visibility.Hidden;
         }
 
         private static void DragScroll(FrameworkElement itemsControl, DragEventArgs e)
@@ -213,8 +245,8 @@ namespace TreeViewItemDragMove.Views
         private static T HitTest<T>(UIElement itemsControl, Func<IInputElement, Point> getPosition) where T : class
         {
             var pt = getPosition(itemsControl);
-            var result = itemsControl.InputHitTest(pt) as DependencyObject;
-            if (resultis T ret)
+            var result = itemsControl.InputHitTest(pt);
+            if (result is T ret)
                 return ret;
             return null;
         }
