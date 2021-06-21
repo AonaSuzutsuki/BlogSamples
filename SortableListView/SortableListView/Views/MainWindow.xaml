@@ -15,9 +15,9 @@
     </Window.DataContext>
     <Grid>
         <ListView ItemsSource="{Binding Accounts}">
-            <!--<i:Interaction.Behaviors>
+            <i:Interaction.Behaviors>
                 <behaviors:SortableListViewBehavior />
-            </i:Interaction.Behaviors>-->
+            </i:Interaction.Behaviors>
 
             <ListView.View>
                 <GridView>
