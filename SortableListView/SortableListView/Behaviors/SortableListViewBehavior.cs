@@ -98,7 +98,7 @@ namespace SortableListView.Behaviors
         }
 
 
-        public void GridViewColumnHeaderSort(ListView listView, string headerName, Action<string> setContentSuffixAction)
+        private static void GridViewColumnHeaderSort(ListView listView, string headerName, Action<string> setContentSuffixAction)
         {
             var collectionView = CollectionViewSource.GetDefaultView(listView.ItemsSource);
 
