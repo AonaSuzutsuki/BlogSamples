@@ -88,12 +88,13 @@ namespace SortableListView.Behaviors
                 header.Click += (_, args) => HeaderOnClick(AssociatedObject, args);
             }
 
+            if (string.IsNullOrEmpty(FirstSort))
+                return;
+
             var firstHeader = _headers.Keys.First();
             var content = firstHeader.Content.ToString();
-
-            if (!string.IsNullOrEmpty(FirstSort))
-                GridViewColumnHeaderSort(AssociatedObject, FirstSort,
-                    arg => firstHeader.Content = $"{content} {arg}");
+            GridViewColumnHeaderSort(AssociatedObject, FirstSort,
+                arg => firstHeader.Content = $"{content} {arg}");
         }
 
 
