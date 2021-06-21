@@ -19,7 +19,7 @@
             </i:Interaction.Behaviors>
 
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="viewModels:TreeViewItemInfo" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="viewModels:TreeViewItemInfoBase" ItemsSource="{Binding Children}">
                     <Grid Background="{Binding Background}">
                         <StackPanel>
                             <Separator BorderThickness="1" BorderBrush="Black" Visibility="{Binding BeforeSeparatorVisibility}" />

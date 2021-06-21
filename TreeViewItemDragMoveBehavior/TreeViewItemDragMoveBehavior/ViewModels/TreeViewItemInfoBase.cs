@@ -5,7 +5,7 @@ using Prism.Mvvm;
 
 namespace TreeViewItemDragMoveBehavior.ViewModels
 {
-    public class TreeViewItemInfo : BindableBase
+    public class TreeViewItemInfoBase : BindableBase
     {
         private string _name;
         private Brush _background = Brushes.Transparent;
@@ -14,9 +14,9 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
         private Visibility _beforeSeparatorVisibility = Visibility.Hidden;
         private Visibility _afterSeparatorVisibility = Visibility.Hidden;
 
-        public TreeViewItemInfo Parent { get; set; }
+        public TreeViewItemInfoBase Parent { get; set; }
 
-        public ObservableCollection<TreeViewItemInfo> Children { get; set; } = new ObservableCollection<TreeViewItemInfo>();
+        public ObservableCollection<TreeViewItemInfoBase> Children { get; set; } = new ObservableCollection<TreeViewItemInfoBase>();
 
         public string Name
         {
@@ -54,7 +54,7 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
             set => SetProperty(ref _afterSeparatorVisibility, value);
         }
 
-        public void SetParentToChildren(TreeViewItemInfo parent = null)
+        public void SetParentToChildren(TreeViewItemInfoBase parent = null)
         {
             Parent = parent;
 
@@ -66,7 +66,7 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
             }
         }
 
-        public void InsertBeforeChildren(TreeViewItemInfo from, TreeViewItemInfo to)
+        public void InsertBeforeChildren(TreeViewItemInfoBase from, TreeViewItemInfoBase to)
         {
             var index = Children.IndexOf(to);
             if (index < 0)
@@ -75,7 +75,7 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
             Children.Insert(index, from);
         }
 
-        public void InsertAfterChildren(TreeViewItemInfo from, TreeViewItemInfo to)
+        public void InsertAfterChildren(TreeViewItemInfoBase from, TreeViewItemInfoBase to)
         {
             var index = Children.IndexOf(to);
             if (index < 0)
@@ -84,21 +84,26 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
             Children.Insert(index + 1, from);
         }
 
-        public void AddChildren(TreeViewItemInfo info)
+        public void AddChildren(TreeViewItemInfoBase infoBase)
         {
-            Children.Add(info);
+            Children.Add(infoBase);
         }
 
-        public void RemoveChildren(TreeViewItemInfo info)
+        public void RemoveChildren(TreeViewItemInfoBase infoBase)
         {
-            Children.Remove(info);
+            Children.Remove(infoBase);
         }
 
-        public bool ContainsParent(TreeViewItemInfo info)
+        public bool ContainsParent(TreeViewItemInfoBase infoBase)
         {
             if (Parent == null)
                 return false;
-            return Parent == info || Parent.ContainsParent(info);
+            return Parent == infoBase || Parent.ContainsParent(infoBase);
         }
+    }
+
+    public class TreeViewItemInfo : TreeViewItemInfoBase
+    {
+
     }
 }

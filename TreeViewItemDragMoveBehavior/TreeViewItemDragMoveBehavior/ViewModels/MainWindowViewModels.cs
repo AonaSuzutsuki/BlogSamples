@@ -11,48 +11,48 @@ namespace TreeViewItemDragMoveBehavior.ViewModels
 {
     public class MainWindowViewModels
     {
-        public ObservableCollection<TreeViewItemInfo> SampleItems { get; set; }
+        public ObservableCollection<TreeViewItemInfoBase> SampleItems { get; set; }
         public ICommand DropCommand { get; set; }
 
         public MainWindowViewModels()
         {
             DropCommand = new DelegateCommand<DropArguments>(Drop);
-            SampleItems = new ObservableCollection<TreeViewItemInfo>(new []
+            SampleItems = new ObservableCollection<TreeViewItemInfoBase>(new []
             {
-                new TreeViewItemInfo { Name = "Item1"},
-                new TreeViewItemInfo
+                new TreeViewItemInfoBase { Name = "Item1"},
+                new TreeViewItemInfoBase
                 {
                     Name = "Item2",
-                    Children = new ObservableCollection<TreeViewItemInfo>
+                    Children = new ObservableCollection<TreeViewItemInfoBase>
                     {
-                        new TreeViewItemInfo { Name = "SubItem1"},
-                        new TreeViewItemInfo
+                        new TreeViewItemInfoBase { Name = "SubItem1"},
+                        new TreeViewItemInfoBase
                         {
                             Name = "SubItem2",
-                            Children = new ObservableCollection<TreeViewItemInfo>
+                            Children = new ObservableCollection<TreeViewItemInfoBase>
                             {
-                                new TreeViewItemInfo { Name = "SubSubItem1" },
-                                new TreeViewItemInfo { Name = "SubSubItem2" },
+                                new TreeViewItemInfoBase { Name = "SubSubItem1" },
+                                new TreeViewItemInfoBase { Name = "SubSubItem2" },
                             }
                         },
-                        new TreeViewItemInfo { Name = "SubItem3"}
+                        new TreeViewItemInfoBase { Name = "SubItem3"}
                     }
                 },
-                new TreeViewItemInfo { Name = "Item3"},
-                new TreeViewItemInfo { Name = "Item4"},
-                new TreeViewItemInfo
+                new TreeViewItemInfoBase { Name = "Item3"},
+                new TreeViewItemInfoBase { Name = "Item4"},
+                new TreeViewItemInfoBase
                 {
                     Name = "Item5",
-                    Children = new ObservableCollection<TreeViewItemInfo>
+                    Children = new ObservableCollection<TreeViewItemInfoBase>
                     {
-                        new TreeViewItemInfo { Name = "SubItem1"},
-                        new TreeViewItemInfo { Name = "SubItem2"},
-                        new TreeViewItemInfo { Name = "SubItem3"}
+                        new TreeViewItemInfoBase { Name = "SubItem1"},
+                        new TreeViewItemInfoBase { Name = "SubItem2"},
+                        new TreeViewItemInfoBase { Name = "SubItem3"}
                     }
                 }
             });
 
-            var dummy = new TreeViewItemInfo { Children = SampleItems };
+            var dummy = new TreeViewItemInfoBase { Children = SampleItems };
             foreach (var item in dummy.Children)
             {
                 item.SetParentToChildren(dummy);
