@@ -63,6 +63,7 @@ namespace SortableListView.Behaviors
             if (!(e.OriginalSource is GridViewColumnHeader header))
                 return;
 
+            // 全てのヘッダーを初期表示に戻す
             foreach (var h in _headers)
             {
                 h.Key.Content = h.Value;
@@ -79,6 +80,8 @@ namespace SortableListView.Behaviors
             if (!(AssociatedObject.View is GridView gridView))
                 return;
 
+            // GridViewColumnHeaderのClickイベントにメソッドを登録
+            // 同時にヘッダーの初期表示を記録
             foreach (var gridViewColumn in gridView.Columns)
             {
                 if (!(gridViewColumn.Header is GridViewColumnHeader header) || _headers.ContainsKey(header))
@@ -88,6 +91,7 @@ namespace SortableListView.Behaviors
                 header.Click += (_, args) => HeaderOnClick(AssociatedObject, args);
             }
 
+            // 初期表示時にソートするカラムがなければソートしない
             if (string.IsNullOrEmpty(FirstSort))
                 return;
 
@@ -98,14 +102,18 @@ namespace SortableListView.Behaviors
         }
 
 
-        public void GridViewColumnHeaderSort(ListView listView, string headerName, Action<string> setContentSuffixAction)
+        private static void GridViewColumnHeaderSort(ListView listView, string headerName, Action<string> setContentSuffixAction)
         {
+            // ListView#ItemsSourceからCollectionViewを取得
             var collectionView = CollectionViewSource.GetDefaultView(listView.ItemsSource);
 
+            // CollectionViewからSortDescriptionsの最初の要素を取得
             var sortDescription = collectionView.SortDescriptions.FirstOrDefault();
+            // ソート方法をクリア
             collectionView.SortDescriptions.Clear();
             if (sortDescription.PropertyName == headerName)
             {
+                // SortDescriptionsのヘッダ名とクリックしたヘッダ名が同一なら降順か昇順かをチェンジする
                 if (sortDescription.Direction == ListSortDirection.Ascending)
                 {
                     collectionView.SortDescriptions.Add(new SortDescription(headerName, ListSortDirection.Descending));
@@ -119,6 +127,7 @@ namespace SortableListView.Behaviors
             }
             else
             {
+                // 昇順でソートする
                 collectionView.SortDescriptions.Add(new SortDescription(headerName, ListSortDirection.Ascending));
                 setContentSuffixAction?.Invoke("↑");
             }
