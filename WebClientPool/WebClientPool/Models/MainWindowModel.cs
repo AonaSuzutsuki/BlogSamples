@@ -57,16 +57,24 @@ namespace WebClientPool.Models
             }
 
             await Task.WhenAll(tasks);
+
+            LogText += "Finished All.";
         }
 
         public void DownloadStarted(string url)
         {
-            Debug.WriteLine($"Start {url}");
+            lock (LogText)
+            {
+                LogText += $"Start {url}\n";
+            }
         }
 
         public void DownloadCompleted(string url)
         {
-            Debug.WriteLine($"Finished {url}");
+            lock (LogText)
+            {
+                LogText += $"Finished {url}\n";
+            }
         }
 
         public void Dispose()
