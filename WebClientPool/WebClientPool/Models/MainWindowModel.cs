@@ -35,7 +35,7 @@ namespace WebClientPool.Models
 
         public async Task Download(string urlText)
         {
-            var webClientPool = new WebClientPool<DummyWebClient>(3, client =>
+            using var webClientPool = new WebClientPool<DummyWebClient>(3, client =>
             {
                 client.DownloadStarted.Subscribe(DownloadStarted);
                 client.CompletedChanged.Subscribe(DownloadCompleted);
@@ -43,6 +43,14 @@ namespace WebClientPool.Models
 
             var convertedUrlText = urlText.Replace("\r\n", "\n").Replace("\r", "\n");
             var urls = from x in convertedUrlText.Split('\n') where !string.IsNullOrEmpty(x) select x;
+
+            await DownloadTask(urls, webClientPool);
+
+            LogText += "Finished All.";
+        }
+
+        private static async Task DownloadTask(IEnumerable<string> urls, WebClientPool<DummyWebClient> webClientPool)
+        {
             var tasks = new List<Task>();
             foreach (var (url, index) in urls.Select((v, i) => (Value: v, Index: i)))
             {
@@ -55,9 +63,7 @@ namespace WebClientPool.Models
                 tasks.Add(task);
             }
 
-            await Task.WhenAll(tasks).ContinueWith(_ => webClientPool.Dispose());
-
-            LogText += "Finished All.";
+            await Task.WhenAll(tasks);
         }
 
         public void DownloadStarted(string url)
