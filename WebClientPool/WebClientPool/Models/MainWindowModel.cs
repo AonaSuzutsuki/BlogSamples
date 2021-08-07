@@ -11,13 +11,11 @@ using WebClientPool.Models.Pools;
 
 namespace WebClientPool.Models
 {
-    public class MainWindowModel : BindableBase, IDisposable
+    public class MainWindowModel : BindableBase
     {
         #region Fields
         
         private string _logText = string.Empty;
-
-        private readonly WebClientPool<DummyWebClient> _webClientPool;
 
         #endregion
 
@@ -33,30 +31,31 @@ namespace WebClientPool.Models
 
         public MainWindowModel()
         {
-            _webClientPool = new WebClientPool<DummyWebClient>(3, client =>
-            {
-                client.DownloadStarted.Subscribe(DownloadStarted);
-                client.CompletedChanged.Subscribe(DownloadCompleted);
-            });
         }
 
         public async Task Download(string urlText)
         {
+            var webClientPool = new WebClientPool<DummyWebClient>(3, client =>
+            {
+                client.DownloadStarted.Subscribe(DownloadStarted);
+                client.CompletedChanged.Subscribe(DownloadCompleted);
+            });
+
             var convertedUrlText = urlText.Replace("\r\n", "\n").Replace("\r", "\n");
             var urls = from x in convertedUrlText.Split('\n') where !string.IsNullOrEmpty(x) select x;
             var tasks = new List<Task>();
             foreach (var (url, index) in urls.Select((v, i) => (Value: v, Index: i)))
             {
-                var webClient = await _webClientPool.GetWebClient();
+                var webClientInfo = await webClientPool.GetWebClient();
                 var task = Task.Factory.StartNew(() =>
                 {
-                    webClient.Client.DownloadString(url, index);
-                    _webClientPool.ReturnWebClient(webClient);
+                    webClientInfo.Client.DownloadString(url, index);
+                    webClientPool.ReturnWebClient(webClientInfo);
                 });
                 tasks.Add(task);
             }
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ContinueWith(_ => webClientPool.Dispose());
 
             LogText += "Finished All.";
         }
@@ -75,11 +74,6 @@ namespace WebClientPool.Models
             {
                 LogText += $"Finished {url}\n";
             }
-        }
-
-        public void Dispose()
-        {
-            _webClientPool?.Dispose();
         }
     }
 }
