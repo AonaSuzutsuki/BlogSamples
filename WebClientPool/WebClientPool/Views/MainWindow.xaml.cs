@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using WebClientPool.ViewModels;
 
 namespace WebClientPool.Views
 {
@@ -10,6 +11,14 @@ namespace WebClientPool.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            var model = new Models.MainWindowModel();
+            var viewModel = new MainWindowViewModel(new WindowService
+            {
+                View = this,
+                LogTextBox = LogTextBox
+            }, model);
+            DataContext = viewModel;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace WebClientPool.ViewModels
 
         #region Fields
 
-        private readonly MainWindowModel _model = new();
+        private readonly MainWindowModel _model;
 
         #endregion
 
@@ -32,10 +32,11 @@ namespace WebClientPool.ViewModels
 
         #endregion
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IWindowService service, MainWindowModel model)
         {
             UrlText = ReactiveProperty.FromObject(_model, m => m.UrlText);
             LogText = _model.ObserveProperty(m => m.LogText).ToReactiveProperty();
+            _model = model;
 
             DownloadCommand = new DelegateCommand(StartDownload);
             ClosedCommand = new DelegateCommand(Close);

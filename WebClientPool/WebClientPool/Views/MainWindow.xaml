@@ -15,10 +15,6 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Window.DataContext>
-        <viewModels:MainWindowViewModel />
-    </Window.DataContext>
-
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -33,7 +29,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <TextBox Text="{Binding LogText.Value, Mode=OneWay}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+            <TextBox Name="LogTextBox" Text="{Binding LogText.Value, Mode=OneWay}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
         </Grid>
 
         <Grid Grid.Row="4">
