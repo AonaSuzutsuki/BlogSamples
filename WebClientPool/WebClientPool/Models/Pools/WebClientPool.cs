@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -10,7 +11,7 @@ namespace WebClientPool.Models.Pools
 {
     public class WebClientPool<T> : IDisposable where T : IDisposable, new()
     {
-        private readonly ReadOnlyCollection<WebClientInfo<T>> _clients;
+        private readonly ImmutableList<WebClientInfo<T>> _clients;
 
         public WebClientPool(int size, Action<T> postProcessing)
         {
@@ -22,7 +23,7 @@ namespace WebClientPool.Models.Pools
                 clients.Add(new WebClientInfo<T>(i, client, false));
             }
 
-            _clients = new ReadOnlyCollection<WebClientInfo<T>>(clients);
+            _clients = ImmutableList.Create(clients.ToArray());
         }
 
         public async Task<IWebClientInfo<T>> GetWebClient()
@@ -43,7 +44,7 @@ namespace WebClientPool.Models.Pools
                         return client;
                     }
 
-                    Thread.Sleep(1);
+                    Thread.Sleep(100);
                 }
             });
         }
