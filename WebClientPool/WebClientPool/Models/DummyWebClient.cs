@@ -17,11 +17,10 @@ namespace WebClientPool.Models
         public IObservable<string> CompletedChanged => _completedSubject;
 
         #endregion
-
-        private object _lockObj = new object();
+        
         private int _seed = 1;
 
-        public void DownloadString(string url)
+        public void DownloadString(string url, int num)
         {
             //var random = new Random(_seed++);
 
@@ -29,14 +28,9 @@ namespace WebClientPool.Models
             //Thread.Sleep(random.Next(0, 5000));
             //_completedSubject.OnNext(url);
 
-            var cnt = new[] { 3000, 500 };
-            var seed = 0;
-            lock (_lockObj)
-            {
-                seed = _seed++;
-            }
+            var cnt = new[] { 5000, 500 };
             _downloadStartedSubject.OnNext(url);
-            Thread.Sleep(cnt[seed % 2]);
+            Thread.Sleep(cnt[num % 2]);
             _completedSubject.OnNext(url);
         }
 

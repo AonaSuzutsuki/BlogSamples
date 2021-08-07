@@ -45,12 +45,12 @@ namespace WebClientPool.Models
             var convertedUrlText = urlText.Replace("\r\n", "\n").Replace("\r", "\n");
             var urls = from x in convertedUrlText.Split('\n') where !string.IsNullOrEmpty(x) select x;
             var tasks = new List<Task>();
-            foreach (var url in urls)
+            foreach (var (url, index) in urls.Select((v, i) => (Value: v, Index: i)))
             {
                 var webClient = await _webClientPool.GetWebClient();
                 var task = Task.Factory.StartNew(() =>
                 {
-                    webClient.Client.DownloadString(url);
+                    webClient.Client.DownloadString(url, index);
                     _webClientPool.ReturnWebClient(webClient);
                 });
                 tasks.Add(task);
