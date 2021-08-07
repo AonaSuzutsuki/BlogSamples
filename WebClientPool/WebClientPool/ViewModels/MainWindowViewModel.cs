@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Text;
 using System.Windows.Input;
 using Prism.Commands;
@@ -14,6 +15,7 @@ namespace WebClientPool.ViewModels
 
         #region Fields
 
+        private readonly CompositeDisposable _disposable = new();
         private readonly MainWindowModel _model;
 
         #endregion
@@ -34,9 +36,11 @@ namespace WebClientPool.ViewModels
 
         public MainWindowViewModel(IWindowService service, MainWindowModel model)
         {
-            UrlText = ReactiveProperty.FromObject(_model, m => m.UrlText);
-            LogText = _model.ObserveProperty(m => m.LogText).ToReactiveProperty();
             _model = model;
+
+            UrlText = new ReactiveProperty<string>();
+            LogText = _model.ObserveProperty(m => m.LogText).ToReactiveProperty().AddTo(_disposable);
+            _ = LogText.Subscribe(_ => service.ScrollToEndLog());
 
             DownloadCommand = new DelegateCommand(StartDownload);
             ClosedCommand = new DelegateCommand(Close);
@@ -44,11 +48,12 @@ namespace WebClientPool.ViewModels
 
         public void StartDownload()
         {
-            _ = _model.Download();
+            _ = _model.Download(UrlText.Value);
         }
 
         public void Close()
         {
+            _disposable.Dispose();
             _model?.Dispose();
         }
     }

@@ -13,24 +13,16 @@ namespace WebClientPool.Models
 {
     public class MainWindowModel : BindableBase, IDisposable
     {
-
         #region Fields
-
-        private string _urlText = string.Empty;
+        
         private string _logText = string.Empty;
-        private ConcurrentBag<int> cb = new();
 
         private readonly WebClientPool<DummyWebClient> _webClientPool;
 
         #endregion
 
         #region Properties
-
-        public string UrlText
-        {
-            get => _urlText;
-            set => SetProperty(ref _urlText, value);
-        }
+        
         public string LogText
         {
             get => _logText;
@@ -48,9 +40,9 @@ namespace WebClientPool.Models
             });
         }
 
-        public async Task Download()
+        public async Task Download(string urlText)
         {
-            var convertedUrlText = UrlText.Replace("\r\n", "\n").Replace("\r", "\n");
+            var convertedUrlText = urlText.Replace("\r\n", "\n").Replace("\r", "\n");
             var urls = from x in convertedUrlText.Split('\n') where !string.IsNullOrEmpty(x) select x;
             var tasks = new List<Task>();
             foreach (var url in urls)
