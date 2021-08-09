@@ -21,7 +21,7 @@ namespace WebClientPool.Models.Pools
             {
                 var client = new T();
                 postProcessing?.Invoke(client);
-                clients.Add(new WebClientInfo<T>(i, client, false));
+                clients.Add(new WebClientInfo<T>(i, client));
             }
 
             _clients = ImmutableList.Create(clients.ToArray());
@@ -33,15 +33,9 @@ namespace WebClientPool.Models.Pools
             {
                 while (true)
                 {
-                    foreach (var client in _clients)
+                    foreach (var client in _clients.Where(client => !client.IsBusy))
                     {
-                        lock (client)
-                        {
-                            if (client.IsBusy)
-                                continue;
-
-                            client.IsBusy = true;
-                        }
+                        client.IsBusy = true;
                         return client;
                     }
 
@@ -53,20 +47,14 @@ namespace WebClientPool.Models.Pools
         public void ReturnWebClient(IWebClientInfo<T> webClient)
         {
             var client = _clients[webClient.Id];
-            lock (client)
-            {
-                client.IsBusy = false;
-            }
+            client.IsBusy = false;
         }
 
         public void Dispose()
         {
             foreach (var client in _clients)
             {
-                lock (client)
-                {
-                    client.Client.Dispose();
-                }
+                client.Dispose();
             }
         }
     }
