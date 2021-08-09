@@ -10,10 +10,19 @@ using System.Threading.Tasks;
 
 namespace WebClientPool.Models.Pools
 {
+    /// <summary>
+    /// Provides a pooled WebClient.
+    /// </summary>
+    /// <typeparam name="T">WebClient.</typeparam>
     public class WebClientPool<T> : IDisposable where T : IDisposable, new()
     {
         private readonly ImmutableList<WebClientInfo<T>> _clients;
 
+        /// <summary>
+        /// Initialize.
+        /// </summary>
+        /// <param name="size">Max number of pooled WebClient.</param>
+        /// <param name="postProcessing">Action to be performed after the WebClient instance has been created.</param>
         public WebClientPool(int size, Action<T> postProcessing)
         {
             var clients = new List<WebClientInfo<T>>();
@@ -27,6 +36,10 @@ namespace WebClientPool.Models.Pools
             _clients = ImmutableList.Create(clients.ToArray());
         }
 
+        /// <summary>
+        /// Get the WebClient that is available.
+        /// </summary>
+        /// <returns>The WebClient that is available.</returns>
         public async Task<IWebClientInfo<T>> GetWebClient()
         {
             return await Task.Factory.StartNew(() =>
@@ -44,6 +57,10 @@ namespace WebClientPool.Models.Pools
             });
         }
 
+        /// <summary>
+        /// Return the WebClient used.
+        /// </summary>
+        /// <param name="webClient">The used WebClient.</param>
         public void ReturnWebClient(IWebClientInfo<T> webClient)
         {
             var client = _clients[webClient.Id];

@@ -57,7 +57,7 @@ namespace WebClientPool.Models
                 var webClientInfo = await webClientPool.GetWebClient();
                 var task = Task.Factory.StartNew(() =>
                 {
-                    webClientInfo.Client.DownloadString(url, index);
+                    webClientInfo.Client.DownloadString(url, index); // WebClientオブジェクトなら DownloadString(url)
                     webClientPool.ReturnWebClient(webClientInfo);
                 });
                 tasks.Add(task);
