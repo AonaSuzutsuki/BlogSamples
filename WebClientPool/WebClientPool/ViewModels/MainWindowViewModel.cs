@@ -54,7 +54,6 @@ namespace WebClientPool.ViewModels
         public void Close()
         {
             _disposable.Dispose();
-            _model?.Dispose();
         }
     }
 }
