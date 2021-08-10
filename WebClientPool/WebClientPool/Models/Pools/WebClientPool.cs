@@ -46,7 +46,8 @@ namespace WebClientPool.Models.Pools
             {
                 while (true)
                 {
-                    foreach (var client in _clients.Where(client => !client.IsBusy))
+                    var client = _clients.FirstOrDefault(x => !x.IsBusy);
+                    if (client != null)
                     {
                         client.IsBusy = true;
                         return client;
