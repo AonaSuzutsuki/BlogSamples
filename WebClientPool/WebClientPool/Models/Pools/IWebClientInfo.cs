@@ -1,18 +1,18 @@
 ﻿namespace WebClientPool.Models.Pools
 {
     /// <summary>
-    /// Provides an interface to access pooled WebClient objects.
+    /// プールされたWebClientにアクセスするインタフェースです。
     /// </summary>
-    /// <typeparam name="T">WebClient.</typeparam>
+    /// <typeparam name="T">WebClientなど</typeparam>
     public interface IWebClientInfo<out T>
     {
         /// <summary>
-        /// Internal ID to use in the pool.
+        /// プールオブジェクトで使用する内部ID
         /// </summary>
         int Id { get; }
 
         /// <summary>
-        /// A pooled WebClient objects.
+        /// プールされたWebClient
         /// </summary>
         T Client { get; }
     }

@@ -4,9 +4,9 @@ using System.Threading;
 namespace WebClientPool.Models.Pools
 {
     /// <summary>
-    /// Manage the usage of pooled WebClient objects.
+    /// プールされたWebClientオブジェクトを管理します。
     /// </summary>
-    /// <typeparam name="T">WebClient.</typeparam>
+    /// <typeparam name="T">WebClientなど</typeparam>
     public class WebClientInfo<T> : IWebClientInfo<T>, IDisposable where T : IDisposable
     {
         #region Fields
@@ -22,7 +22,7 @@ namespace WebClientPool.Models.Pools
         public T Client { get; }
 
         /// <summary>
-        /// Determines if a WebClient object is in use.
+        /// WebClientが使用中かどうかを判定します。
         /// </summary>
         public bool IsBusy
         {
@@ -57,8 +57,8 @@ namespace WebClientPool.Models.Pools
         /// <summary>
         /// Initialize.
         /// </summary>
-        /// <param name="id">Unique id of number.</param>
-        /// <param name="client">A pooled WebClient object.</param>
+        /// <param name="id">内部で使用するユニークID</param>
+        /// <param name="client">プールするWebClientなどのオブジェクト</param>
         public WebClientInfo(int id, T client)
         {
             Id = id;
@@ -66,9 +66,9 @@ namespace WebClientPool.Models.Pools
         }
 
         /// <summary>
-        /// Convert to string this object.
+        /// 現在のオブジェクトを文字列に変換します。
         /// </summary>
-        /// <returns>The converted to string this object.</returns>
+        /// <returns>変換された文字列</returns>
         public override string ToString()
         {
             return $"Id: {Id}, IsBusy: {IsBusy}";
