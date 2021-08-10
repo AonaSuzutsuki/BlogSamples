@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace WebClientPool.Models.Pools
 {
     /// <summary>
-    /// Provides a pooled WebClient.
+    /// WebClientの使用状況を管理します。
     /// </summary>
-    /// <typeparam name="T">WebClient.</typeparam>
+    /// <typeparam name="T">WebClientなど</typeparam>
     public class WebClientPool<T> : IDisposable where T : IDisposable, new()
     {
         private readonly ImmutableList<WebClientInfo<T>> _clients;
@@ -21,8 +21,8 @@ namespace WebClientPool.Models.Pools
         /// <summary>
         /// Initialize.
         /// </summary>
-        /// <param name="size">Max number of pooled WebClient.</param>
-        /// <param name="postProcessing">Action to be performed after the WebClient instance has been created.</param>
+        /// <param name="size">プールするWebClientの最大数</param>
+        /// <param name="postProcessing">WebClientのインスタンスが生成された後に処理するActionオブジェクト</param>
         public WebClientPool(int size, Action<T> postProcessing)
         {
             var clients = new List<WebClientInfo<T>>();
@@ -37,9 +37,9 @@ namespace WebClientPool.Models.Pools
         }
 
         /// <summary>
-        /// Get the WebClient that is available.
+        /// 使用可能なWebClientを返します。
         /// </summary>
-        /// <returns>The WebClient that is available.</returns>
+        /// <returns>使用可能なWebClientオブジェクト</returns>
         public async Task<IWebClientInfo<T>> GetWebClient()
         {
             return await Task.Factory.StartNew(() =>
@@ -59,9 +59,9 @@ namespace WebClientPool.Models.Pools
         }
 
         /// <summary>
-        /// Return the WebClient used.
+        /// 使用したWebClientを返却します。
         /// </summary>
-        /// <param name="webClient">The used WebClient.</param>
+        /// <param name="webClient">使用したWebClientオブジェクト</param>
         public void ReturnWebClient(IWebClientInfo<T> webClient)
         {
             var client = _clients[webClient.Id];
