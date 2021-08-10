@@ -46,11 +46,16 @@ namespace WebClientPool.Models.Pools
             {
                 while (true)
                 {
-                    var client = _clients.FirstOrDefault(x => !x.IsBusy);
-                    if (client != null)
+                    foreach (var webClientInfo in _clients)
                     {
-                        client.IsBusy = true;
-                        return client;
+                        lock (webClientInfo)
+                        {
+                            if (webClientInfo.IsBusy)
+                                continue;
+
+                            webClientInfo.IsBusy = true;
+                            return webClientInfo;
+                        }
                     }
 
                     Thread.Sleep(100);
@@ -65,14 +70,17 @@ namespace WebClientPool.Models.Pools
         public void ReturnWebClient(IWebClientInfo<T> webClient)
         {
             var client = _clients[webClient.Id];
-            client.IsBusy = false;
+            lock (client)
+            {
+                client.IsBusy = false;
+            }
         }
 
         public void Dispose()
         {
             foreach (var client in _clients)
             {
-                client.Dispose();
+                client.Client.Dispose();
             }
         }
     }

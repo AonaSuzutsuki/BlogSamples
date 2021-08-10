@@ -7,15 +7,8 @@ namespace WebClientPool.Models.Pools
     /// プールされたWebClientオブジェクトを管理します。
     /// </summary>
     /// <typeparam name="T">WebClientなど</typeparam>
-    public class WebClientInfo<T> : IWebClientInfo<T>, IDisposable where T : IDisposable
+    public class WebClientInfo<T> : IWebClientInfo<T>
     {
-        #region Fields
-
-        private readonly ReaderWriterLockSlim _readerWriterLock = new ();
-        private bool _isBusy;
-
-        #endregion
-
         #region Properties
 
         public int Id { get; }
@@ -24,33 +17,7 @@ namespace WebClientPool.Models.Pools
         /// <summary>
         /// WebClientが使用中かどうかを判定します。
         /// </summary>
-        public bool IsBusy
-        {
-            get
-            {
-                try
-                {
-                    _readerWriterLock.EnterReadLock();
-                    return _isBusy;
-                }
-                finally
-                {
-                    _readerWriterLock.ExitReadLock();
-                }
-            }
-            set
-            {
-                try
-                {
-                    _readerWriterLock.EnterWriteLock();
-                    _isBusy = value;
-                }
-                finally
-                {
-                    _readerWriterLock.ExitWriteLock();
-                }
-            }
-        }
+        public bool IsBusy { get; set; }
 
         #endregion
 
@@ -72,12 +39,6 @@ namespace WebClientPool.Models.Pools
         public override string ToString()
         {
             return $"Id: {Id}, IsBusy: {IsBusy}";
-        }
-
-        public void Dispose()
-        {
-            _readerWriterLock?.Dispose();
-            Client?.Dispose();
         }
     }
 }
