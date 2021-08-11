@@ -12,7 +12,7 @@ namespace WebClientPool.Models.Pools
     {
         #region Fields
 
-        private WebClientPool<T> _pool;
+        private readonly WebClientPool<T> _pool;
 
         #endregion
 
@@ -23,7 +23,6 @@ namespace WebClientPool.Models.Pools
         /// プールオブジェクトで使用する内部ID
         /// </summary>
         public int Id { get; }
-
 
         /// <summary>
         /// プールされたWebClient
@@ -50,7 +49,7 @@ namespace WebClientPool.Models.Pools
             Client = client;
         }
 
-        public Task InvokeTask(Action<T> callback)
+        public Task StartTask(Action<T> callback)
         {
             return Task.Factory.StartNew(() =>
             {

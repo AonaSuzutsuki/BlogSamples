@@ -19,6 +19,6 @@ namespace WebClientPool.Models.Pools
         /// </summary>
         /// <param name="callback">実行するコールバック</param>
         /// <returns>非同期タスクオブジェクト</returns>
-        Task InvokeTask(Action<T> callback);
+        Task StartTask(Action<T> callback);
     }
 }
