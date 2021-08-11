@@ -1,4 +1,7 @@
-﻿namespace WebClientPool.Models.Pools
+﻿using System;
+using System.Threading.Tasks;
+
+namespace WebClientPool.Models.Pools
 {
     /// <summary>
     /// プールされたWebClientにアクセスするインタフェースです。
@@ -12,8 +15,10 @@
         int Id { get; }
 
         /// <summary>
-        /// プールされたWebClient
+        /// 非同期タスクを実行します。
         /// </summary>
-        T Client { get; }
+        /// <param name="callback">実行するコールバック</param>
+        /// <returns>非同期タスクオブジェクト</returns>
+        Task InvokeTask(Action<T> callback);
     }
 }

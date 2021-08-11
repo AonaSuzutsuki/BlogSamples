@@ -55,10 +55,9 @@ namespace WebClientPool.Models
             foreach (var (url, index) in urls.Select((v, i) => (Value: v, Index: i)))
             {
                 var webClientInfo = await webClientPool.GetWebClient();
-                var task = Task.Factory.StartNew(() =>
+                var task = webClientInfo.InvokeTask(client =>
                 {
-                    webClientInfo.Client.DownloadString(url, index); // WebClientオブジェクトなら DownloadString(url)
-                    webClientPool.ReturnWebClient(webClientInfo);
+                    client.DownloadString(url, index);
                 });
                 tasks.Add(task);
             }
