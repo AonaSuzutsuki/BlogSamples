@@ -30,7 +30,7 @@ namespace WebClientPool.Models.Pools
             {
                 var client = new T();
                 postProcessing?.Invoke(client);
-                clients.Add(new WebClientInfo<T>(i, client));
+                clients.Add(new WebClientInfo<T>(this, i, client));
             }
 
             _clients = ImmutableList.Create(clients.ToArray());

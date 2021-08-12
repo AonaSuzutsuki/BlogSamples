@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WebClientPool.Models.Pools
 {
@@ -7,11 +8,25 @@ namespace WebClientPool.Models.Pools
     /// プールされたWebClientオブジェクトを管理します。
     /// </summary>
     /// <typeparam name="T">WebClientなど</typeparam>
-    public class WebClientInfo<T> : IWebClientInfo<T>
+    public class WebClientInfo<T> : IWebClientInfo<T> where T : IDisposable, new()
     {
+        #region Fields
+
+        private readonly WebClientPool<T> _pool;
+
+        #endregion
+
         #region Properties
 
+
+        /// <summary>
+        /// プールオブジェクトで使用する内部ID
+        /// </summary>
         public int Id { get; }
+
+        /// <summary>
+        /// プールされたWebClient
+        /// </summary>
         public T Client { get; }
 
         /// <summary>
@@ -24,12 +39,23 @@ namespace WebClientPool.Models.Pools
         /// <summary>
         /// Initialize.
         /// </summary>
+        /// <param name="pool"></param>
         /// <param name="id">内部で使用するユニークID</param>
         /// <param name="client">プールするWebClientなどのオブジェクト</param>
-        public WebClientInfo(int id, T client)
+        public WebClientInfo(WebClientPool<T> pool, int id, T client)
         {
+            _pool = pool;
             Id = id;
             Client = client;
+        }
+
+        public Task StartTask(Action<T> callback)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                callback(Client);
+                _pool.ReturnWebClient(this);
+            });
         }
 
         /// <summary>
