@@ -51,11 +51,14 @@ namespace WebClientPool.Models.Pools
 
         public Task StartTask(Action<T> callback)
         {
-            return Task.Factory.StartNew(() =>
-            {
-                callback(Client);
-                _pool.ReturnWebClient(this);
-            });
+            var task = Task.Factory.StartNew(() => callback(Client));
+            task.ContinueWith(_ => ReturnToPool());
+            return task;
+        }
+
+        public void ReturnToPool()
+        {
+            _pool.ReturnWebClient(this);
         }
 
         /// <summary>
