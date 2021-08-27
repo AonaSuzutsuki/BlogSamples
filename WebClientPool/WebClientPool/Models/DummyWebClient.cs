@@ -23,6 +23,10 @@ namespace WebClientPool.Models
             var cnt = new[] { 3000, 500 };
             _downloadStartedSubject.OnNext(url);
             Thread.Sleep(cnt[num % 2]);
+
+            if (num % 5 == 0)
+                throw new Exception();
+
             _completedSubject.OnNext(url);
         }
 

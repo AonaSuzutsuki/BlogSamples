@@ -55,14 +55,19 @@ namespace WebClientPool.Models
             foreach (var (url, index) in urls.Select((v, i) => (Value: v, Index: i)))
             {
                 var webClientInfo = await webClientPool.GetWebClient();
-                var task = webClientInfo.StartTask(client =>
+                var task = webClientInfo.StartTask(client => client.DownloadString(url, index));
+                _ = task.ContinueWith(t =>
                 {
-                    client.DownloadString(url, index);
-                });
+                    if (t.Exception != null)
+                        Debug.WriteLine(t.Exception.InnerException?.Message);
+                }, TaskContinuationOptions.OnlyOnFaulted);
                 tasks.Add(task);
             }
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ContinueWith(t =>
+            {
+                Debug.WriteLine(t.Status);
+            });
         }
 
         public void DownloadStarted(string url)
