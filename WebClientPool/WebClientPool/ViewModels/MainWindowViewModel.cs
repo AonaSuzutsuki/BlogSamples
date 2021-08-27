@@ -38,7 +38,7 @@ namespace WebClientPool.ViewModels
         {
             _model = model;
 
-            UrlText = new ReactiveProperty<string>();
+            UrlText = new ReactiveProperty<string>("1\n2\n3\n4\n5\n6\n7\n8\n9\n10");
             LogText = _model.ObserveProperty(m => m.LogText).ToReactiveProperty().AddTo(_disposable);
             _ = LogText.Subscribe(_ => service.ScrollToEndLog());
 

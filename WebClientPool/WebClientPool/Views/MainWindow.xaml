@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            <TextBox Text="{Binding UrlText.Value, Mode=OneWayToSource}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+            <TextBox Text="{Binding UrlText.Value, Mode=TwoWay}" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
         </Grid>
 
         <Grid Grid.Row="2">
