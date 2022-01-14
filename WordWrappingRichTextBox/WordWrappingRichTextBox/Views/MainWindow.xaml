@@ -43,7 +43,7 @@
             </FlowDocument>
         </views:BindableRichTextBox>
 
-        <views:BindableRichTextBox Grid.Row="6" WordWrapping="{Binding IsWordWrapping.Value}" BindingDocument="{Binding Document.Value}" VerticalScrollBarVisibility="Visible" />
         <Label Grid.Row="5" Content="Binding value" />
+        <views:BindableRichTextBox Grid.Row="6" WordWrapping="{Binding IsWordWrapping.Value}" BindingDocument="{Binding Document.Value}" VerticalScrollBarVisibility="Visible" />
     </Grid>
 </Window>
