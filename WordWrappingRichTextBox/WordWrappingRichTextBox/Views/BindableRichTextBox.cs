@@ -13,7 +13,7 @@ namespace WordWrappingRichTextBox.Views
     {
         #region Fields
 
-        private float _dpiX;
+        private readonly float _dpiX;
 
         #endregion
 
