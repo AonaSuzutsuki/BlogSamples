@@ -11,6 +11,12 @@ namespace WordWrappingRichTextBox.Views
 {
     public class BindableRichTextBox : RichTextBox
     {
+        #region Fields
+
+        private float _dpiX;
+
+        #endregion
+
         #region Dependency Properties
 
         public static readonly DependencyProperty BindingDocumentProperty = DependencyProperty.Register("BindingDocument", typeof(FlowDocument),
@@ -91,11 +97,8 @@ namespace WordWrappingRichTextBox.Views
         /// </summary>
         /// <param name="control">RichTextBox object</param>
         /// <returns>Size of text on RichTextBox.</returns>
-        private static System.Windows.Size MeasureString(RichTextBox control)
+        private static System.Windows.Size MeasureString(BindableRichTextBox control)
         {
-            using var graphics = Graphics.FromHwnd(IntPtr.Zero);
-            var dpiX = graphics.DpiX;
-
             var text = new TextRange(control.Document.ContentStart, control.Document.ContentEnd).Text;
             var formattedText = new FormattedText(text,
                 CultureInfo.CurrentCulture,
@@ -103,13 +106,16 @@ namespace WordWrappingRichTextBox.Views
                 new Typeface(control.FontFamily, control.FontStyle, control.FontWeight, control.FontStretch),
                 control.FontSize,
                 System.Windows.Media.Brushes.Black,
-                dpiX);
+                control._dpiX);
 
             return new System.Windows.Size(formattedText.Width, formattedText.Height);
         }
 
         public BindableRichTextBox()
         {
+            using var graphics = Graphics.FromHwnd(IntPtr.Zero);
+            _dpiX = graphics.DpiX;
+            
             TextChanged += (_, _) => ResizeDocument(this);
         }
     }
