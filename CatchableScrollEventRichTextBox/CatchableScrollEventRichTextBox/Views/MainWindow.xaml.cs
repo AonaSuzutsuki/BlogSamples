@@ -19,7 +19,7 @@ namespace CatchableScrollEventRichTextBox.Views
             CustomControlRichTextBox.Document = GenerateFlowDocument();
             BehaviorRichTextBox.Document = GenerateFlowDocument();
 
-            Loaded += (sender, args) =>
+            Loaded += (_, _) =>
             {
                 if (CodeBehindRichTextBox.Template.FindName("PART_ContentHost", CodeBehindRichTextBox) is not
                     ScrollViewer scrollViewer)
