@@ -95,7 +95,7 @@ namespace SortableListView.Behaviors
             if (string.IsNullOrEmpty(FirstSort))
                 return;
 
-            var firstHeader = _headers.Keys.First();
+            var firstHeader = _headers.Keys.First(x => x.Tag.ToString() == FirstSort);
             var content = firstHeader.Content.ToString();
             GridViewColumnHeaderSort(AssociatedObject, FirstSort,
                 arg => firstHeader.Content = $"{content} {arg}");
