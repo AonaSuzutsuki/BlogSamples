@@ -17,7 +17,7 @@
     <Grid>
         <ListView ItemsSource="{Binding FileList}">
             <i:Interaction.Behaviors>
-                <behaviors:SortableListViewBehavior FirstSort="Name" FirstSortOrder="Desc" />
+                <behaviors:SortableFileSizeListViewBehavior FirstSort="Name" FirstSortOrder="Desc" />
             </i:Interaction.Behaviors>
 
             <ListView.View>
