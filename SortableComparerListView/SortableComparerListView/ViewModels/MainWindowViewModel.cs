@@ -24,6 +24,11 @@ namespace SortableComparerListView.ViewModels
                     Name = "File4.dat",
                     FileSize = 41235
                 },
+                new ()
+                {
+                    Name = "File6.dat",
+                    FileSize = 15098214000
+                },
                 new()
                 {
                     Name = "File2.dat",
