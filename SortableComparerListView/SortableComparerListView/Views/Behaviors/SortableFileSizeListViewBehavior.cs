@@ -7,38 +7,12 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using SortableComparerListView.ViewModels;
+using SortableComparerListView.Views.Comparer;
 
 namespace SortableComparerListView.Views.Behaviors
 {
     public class SortableFileSizeListViewBehavior : SortableListViewBehavior
     {
-        private class FileSizeDescComparer : IComparer
-        {
-            public int Compare(object? x, object? y)
-            {
-                if (x is not FileListInfo logFileItemX || y is not FileListInfo logFileItemY)
-                    return 0;
-
-                var valueX = logFileItemX.FileSize;
-                var valueY = logFileItemY.FileSize;
-
-                if (valueX > valueY) return -1;
-                if (valueX < valueY) return 1;
-                return 0;
-            }
-        }
-
-        private class FileSizeAscComparer : IComparer
-        {
-            public int Compare(object? x, object? y)
-            {
-                if (x is not FileListInfo logFileItemX || y is not FileListInfo logFileItemY)
-                    return 0;
-
-                return logFileItemX.FileSize.CompareTo(logFileItemY.FileSize);
-            }
-        }
-
         private readonly IComparer _descFileSizeComparer = new FileSizeDescComparer();
         private readonly IComparer _ascFileSizeComparer = new FileSizeAscComparer();
 
