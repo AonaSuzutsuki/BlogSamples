@@ -19,7 +19,12 @@ namespace SortableComparerListView.Views.Behaviors
                 if (x is not FileListInfo logFileItemX || y is not FileListInfo logFileItemY)
                     return 0;
 
-                return logFileItemX.FileSize.CompareTo(logFileItemY.FileSize);
+                var valueX = logFileItemX.FileSize;
+                var valueY = logFileItemY.FileSize;
+
+                if (valueX > valueY) return -1;
+                if (valueX < valueY) return 1;
+                return 0;
             }
         }
 
@@ -30,12 +35,7 @@ namespace SortableComparerListView.Views.Behaviors
                 if (x is not FileListInfo logFileItemX || y is not FileListInfo logFileItemY)
                     return 0;
 
-                var valueX = logFileItemX.FileSize;
-                var valueY = logFileItemY.FileSize;
-
-                if (valueX > valueY) return -1;
-                if (valueX < valueY) return 1;
-                return 0;
+                return logFileItemX.FileSize.CompareTo(logFileItemY.FileSize);
             }
         }
 
