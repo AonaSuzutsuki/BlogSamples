@@ -1,12 +1,7 @@
-﻿using SortableComparerListView.ViewModels;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
+using SortableComparerListView.ViewModels;
 
-namespace SortableComparerListView.Views.Comparer
+namespace SortableComparerListView.Comparer
 {
     public class FileSizeDescComparer : IComparer
     {
@@ -15,12 +10,7 @@ namespace SortableComparerListView.Views.Comparer
             if (x is not FileListInfo logFileItemX || y is not FileListInfo logFileItemY)
                 return 0;
 
-            var valueX = logFileItemX.FileSize;
-            var valueY = logFileItemY.FileSize;
-
-            if (valueX > valueY) return -1;
-            if (valueX < valueY) return 1;
-            return 0;
+            return logFileItemX.FileSize.CompareTo(logFileItemY.FileSize) * -1;
         }
     }
 }

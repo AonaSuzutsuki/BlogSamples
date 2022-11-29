@@ -1,12 +1,7 @@
-﻿using SortableComparerListView.ViewModels;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
+using SortableComparerListView.ViewModels;
 
-namespace SortableComparerListView.Views.Comparer
+namespace SortableComparerListView.Comparer
 {
     public class FileSizeAscComparer : IComparer
     {
