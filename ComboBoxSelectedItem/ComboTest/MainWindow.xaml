@@ -1,0 +1,89 @@
+﻿<Window x:Class="ComboTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComboTest"
+        xmlns:viewModel="clr-namespace:ComboTest.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
+        Title="MainWindow" Height="200" Width="400">
+
+    <Grid>
+        <StackPanel>
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Content="動かない例" />
+
+                    <ComboBox Name="Invalid" Grid.Column="1" ItemsSource="{Binding InvalidComboItems}" SelectedItem="{Binding InvalidSelectedItem.Value}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="IsSelected" Value="{Binding Path=IsSelected}"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </Grid>
+
+            </StackPanel>
+
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Content="動く例" />
+
+                    <ComboBox Grid.Column="1" Name="Valid" ItemsSource="{Binding ValidComboItems}" SelectedItem="{Binding ValidSelectedItem.Value}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=OneWayToSource}"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Content="動く例 (OneWay)" />
+
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding ValidOneWayComboItems}" SelectedItem="{Binding ValidOneWaySelectedItem.Value, Mode=OneWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+
+            <Grid>
+                <Button Content="再描写" Command="{Binding ChangeCommand}" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
