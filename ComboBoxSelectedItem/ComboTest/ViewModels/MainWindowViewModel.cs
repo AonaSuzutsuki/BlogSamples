@@ -16,8 +16,7 @@ public class MainWindowViewModel : BindableBase
     public ReadOnlyObservableCollection<MyComboItem> InvalidComboItems { get; set; }
     public ReadOnlyObservableCollection<MyComboItem> ValidComboItems { get; set; }
     public ReadOnlyObservableCollection<MyComboItem> ValidOneWayComboItems { get; set; }
-
-    public ReactiveProperty<MyComboItem?> InvalidSelectedItem { get; set; }
+    
     public ReactiveProperty<MyComboItem?> ValidSelectedItem { get; set; }
     public ReactiveProperty<MyComboItem?> ValidOneWaySelectedItem { get; set; }
 
@@ -37,7 +36,6 @@ public class MainWindowViewModel : BindableBase
         InvalidComboItems = model.Items.ToReadOnlyReactiveCollection();
         ValidSelectedItem = model.ToReactivePropertyAsSynchronized(m => m.ValidSelectedItem);
         ValidOneWaySelectedItem = model.ToReactivePropertyAsSynchronized(m => m.ValidOneWaySelectedItem);
-        InvalidSelectedItem = model.ToReactivePropertyAsSynchronized(m => m.InvalidSelectedItem);
 
 
         ChangeCommand = new DelegateCommand(Change);
