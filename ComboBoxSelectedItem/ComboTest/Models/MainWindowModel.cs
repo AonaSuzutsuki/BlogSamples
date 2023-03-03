@@ -6,6 +6,7 @@ namespace ComboTest.Models;
 public class MainWindowModel : BindableBase
 {
     private ObservableCollection<MyComboItem> _items;
+    private MyComboItem? _invalidTwoWaySelectedItem;
     private MyComboItem? _validSelectedItem;
     private MyComboItem? _validOneWaySelectedItem;
 
@@ -13,6 +14,12 @@ public class MainWindowModel : BindableBase
     {
         get => _items;
         set => SetProperty(ref _items, value);
+    }
+
+    public MyComboItem? InvalidTwoWaySelectedItem
+    {
+        get => _invalidTwoWaySelectedItem;
+        set => SetProperty(ref _invalidTwoWaySelectedItem, value);
     }
 
     public MyComboItem? ValidSelectedItem
@@ -40,7 +47,7 @@ public class MainWindowModel : BindableBase
         Items.Add(new MyComboItem { Name = "Item4" });
         Items.Add(new MyComboItem { Name = "Item5" });
 
-        ValidSelectedItem = Items[1]; // 意味ないのでいらないけど普通はこう書いちゃうと思う
+        InvalidTwoWaySelectedItem = Items[1];
         ValidOneWaySelectedItem = Items[1];
     }
 

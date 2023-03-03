@@ -14,11 +14,11 @@
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="130" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Content="動かない例" />
+                    <Label Grid.Column="0" Content="動かない例 (IsSelected)" />
 
                     <ComboBox Name="Invalid" Grid.Column="1" ItemsSource="{Binding InvalidComboItems}">
                         <ComboBox.ItemTemplate>
@@ -40,11 +40,31 @@
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="130" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Content="動く例" />
+                    <Label Grid.Column="0" Content="動かない例 (TwoWay)" />
+
+                    <ComboBox Name="InvalidTwoWay" Grid.Column="1" ItemsSource="{Binding InvalidTwoWayComboItems}" SelectedItem="{Binding InvalidTwoWaySelectedItem.Value}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+
+            </StackPanel>
+
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Content="動く例 (TwoWay)" />
 
                     <ComboBox Grid.Column="1" Name="Valid" ItemsSource="{Binding ValidComboItems}" SelectedItem="{Binding ValidSelectedItem.Value}">
                         <ComboBox.ItemTemplate>
@@ -65,7 +85,7 @@
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="130" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
