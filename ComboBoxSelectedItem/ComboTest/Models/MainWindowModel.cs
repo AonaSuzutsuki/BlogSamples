@@ -8,7 +8,6 @@ public class MainWindowModel : BindableBase
     private ObservableCollection<MyComboItem> _items;
     private MyComboItem? _validSelectedItem;
     private MyComboItem? _validOneWaySelectedItem;
-    private MyComboItem? _invalidSelectedItem;
 
     public ObservableCollection<MyComboItem> Items
     {
@@ -28,12 +27,6 @@ public class MainWindowModel : BindableBase
         set => SetProperty(ref _validOneWaySelectedItem, value);
     }
 
-    public MyComboItem? InvalidSelectedItem
-    {
-        get => _invalidSelectedItem;
-        set => SetProperty(ref _invalidSelectedItem, value);
-    }
-
     public MainWindowModel()
     {
         _items = new ObservableCollection<MyComboItem>();
@@ -50,7 +43,6 @@ public class MainWindowModel : BindableBase
 
         ValidSelectedItem = _items[1];
         ValidOneWaySelectedItem = _items[1];
-        InvalidSelectedItem = _items[1];
     }
 
     public void Change()
@@ -64,7 +56,6 @@ public class MainWindowModel : BindableBase
 
         ValidSelectedItem = _items[1];
         ValidOneWaySelectedItem = _items[1];
-        InvalidSelectedItem = _items[1];
     }
 
     public void SelectValidItem()

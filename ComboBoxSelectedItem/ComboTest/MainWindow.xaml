@@ -20,7 +20,7 @@
 
                     <Label Grid.Column="0" Content="動かない例" />
 
-                    <ComboBox Name="Invalid" Grid.Column="1" ItemsSource="{Binding InvalidComboItems}" SelectedItem="{Binding InvalidSelectedItem.Value}">
+                    <ComboBox Name="Invalid" Grid.Column="1" ItemsSource="{Binding InvalidComboItems}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <Label Content="{Binding Name}" />
