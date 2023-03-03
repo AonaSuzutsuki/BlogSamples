@@ -40,6 +40,7 @@ public class MainWindowModel : BindableBase
         Items.Add(new MyComboItem { Name = "Item4" });
         Items.Add(new MyComboItem { Name = "Item5" });
 
+        ValidSelectedItem = Items[1]; // 意味ないのでいらないけど普通はこう書いちゃうと思う
         ValidOneWaySelectedItem = Items[1];
     }
 
