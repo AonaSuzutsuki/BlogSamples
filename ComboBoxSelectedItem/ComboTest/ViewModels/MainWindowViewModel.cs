@@ -11,7 +11,7 @@ namespace ComboTest.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
-    private MainWindowModel _model;
+    private readonly MainWindowModel _model;
 
     public ReadOnlyObservableCollection<MyComboItem> InvalidComboItems { get; set; }
     public ReadOnlyObservableCollection<MyComboItem> ValidComboItems { get; set; }
@@ -35,7 +35,7 @@ public class MainWindowViewModel : BindableBase
         ValidOneWayComboItems = model.Items.ToReadOnlyReactiveCollection();
         InvalidComboItems = model.Items.ToReadOnlyReactiveCollection();
         ValidSelectedItem = model.ToReactivePropertyAsSynchronized(m => m.ValidSelectedItem);
-        ValidOneWaySelectedItem = model.ToReactivePropertyAsSynchronized(m => m.ValidOneWaySelectedItem);
+        ValidOneWaySelectedItem = model.ObserveProperty(m => m.ValidOneWaySelectedItem).ToReactiveProperty();
 
 
         ChangeCommand = new DelegateCommand(Change);

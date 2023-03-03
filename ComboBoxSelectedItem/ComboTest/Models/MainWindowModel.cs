@@ -34,33 +34,23 @@ public class MainWindowModel : BindableBase
 
     public void Init()
     {
-        _items.Clear();
-        _items.Add(new MyComboItem { Name = "Item1" });
-        _items.Add(new MyComboItem { Name = "Item2", IsSelected = true });
-        _items.Add(new MyComboItem { Name = "Item3" });
-        _items.Add(new MyComboItem { Name = "Item4" });
-        _items.Add(new MyComboItem { Name = "Item5" });
+        Items.Add(new MyComboItem { Name = "Item1" });
+        Items.Add(new MyComboItem { Name = "Item2", IsSelected = true });
+        Items.Add(new MyComboItem { Name = "Item3" });
+        Items.Add(new MyComboItem { Name = "Item4" });
+        Items.Add(new MyComboItem { Name = "Item5" });
 
-        ValidSelectedItem = _items[1];
-        ValidOneWaySelectedItem = _items[1];
+        ValidOneWaySelectedItem = Items[1];
     }
 
     public void Change()
     {
-        _items.Clear();
-        _items.Add(new MyComboItem { Name = "Item1" });
-        _items.Add(new MyComboItem { Name = "Item2", IsSelected = true });
-        _items.Add(new MyComboItem { Name = "Item3" });
-        _items.Add(new MyComboItem { Name = "Item4" });
-        _items.Add(new MyComboItem { Name = "Item5" });
-
-        ValidSelectedItem = _items[1];
-        ValidOneWaySelectedItem = _items[1];
+        Items.Clear();
+        Init();
     }
 
     public void SelectValidItem()
     {
-        ValidSelectedItem = _items[1];
-        ValidOneWaySelectedItem = _items[1];
+        ValidSelectedItem = Items[1];
     }
 }
