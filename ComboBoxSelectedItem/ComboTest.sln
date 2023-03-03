@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComboTest", "ComboTest\ComboTest.csproj", "{BD000527-8D27-4063-BCD9-9AA966C20364}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD000527-8D27-4063-BCD9-9AA966C20364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD000527-8D27-4063-BCD9-9AA966C20364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD000527-8D27-4063-BCD9-9AA966C20364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD000527-8D27-4063-BCD9-9AA966C20364}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8047001F-6B81-446D-9207-92266565505C}
+	EndGlobalSection
+EndGlobal
