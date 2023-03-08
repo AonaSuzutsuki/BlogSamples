@@ -20,7 +20,7 @@ TreeViewItemDragMoveをBehaviorで実装したバージョン
 3つや5つなど数を指定して並列ダウンロード行うサンプル
 
 6. [CatchableScrollEventRichTextBox](https://github.com/AonaSuzutsuki/BlogSamples/tree/master/CatchableScrollEventRichTextBox)  
-RichTextBox内部のScrollViewerのScrollイベントを捕捉するサンプルです。
+RichTextBox内部のScrollViewerのScrollイベントを捕捉するサンプルです。  
 [WPF RichTextBoxでScrollViewerイベントを捉えて末尾を検知する - 気まま研究所ブログ](https://aonasuzutsuki.hatenablog.jp/entry/2022/01/18/152000)  
 
 7. [WordWrappingRichTextBox](https://github.com/AonaSuzutsuki/BlogSamples/tree/master/WordWrappingRichTextBox)  
