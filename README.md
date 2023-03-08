@@ -5,7 +5,7 @@
 [ヘッダーでソート可能なListViewを実装してみる - 気まま研究所ブログ](https://aonasuzutsuki.hatenablog.jp/entry/2021/06/23/192319)  
 
 2. [SortableComparerListView](https://github.com/AonaSuzutsuki/BlogSamples/tree/master/SortableComparerListView)  
-コンパレータでソート可能なListViewを実装するサンプルです。
+コンパレータでソート可能なListViewを実装するサンプルです。  
 [コンパレータでソート可能なListViewを実装してみる - 気まま研究所ブログ](https://aonasuzutsuki.hatenablog.jp/entry/2022/11/30/131637)  
 
 3. [TreeViewItemDragMove](https://github.com/AonaSuzutsuki/BlogSamples/tree/master/TreeViewItemDragMove)  
