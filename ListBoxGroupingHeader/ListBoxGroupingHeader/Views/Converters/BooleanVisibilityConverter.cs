@@ -26,10 +26,7 @@ namespace ListBoxGroupingHeader.Views.Converters
             if (value is not Visibility visibility)
                 return false;
 
-            if (visibility == Visibility.Collapsed || visibility == Visibility.Hidden)
-                return false;
-
-            return true;
+            return visibility != Visibility.Collapsed && visibility != Visibility.Hidden;
         }
     }
 }

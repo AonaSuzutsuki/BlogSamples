@@ -26,9 +26,6 @@ public class ReverseBooleanVisibilityConverter : MarkupExtension, IValueConverte
         if (value is not Visibility visibility)
             return false;
 
-        if (visibility == Visibility.Collapsed || visibility == Visibility.Hidden)
-            return true;
-
-        return false;
+        return visibility == Visibility.Collapsed || visibility == Visibility.Hidden;
     }
 }
